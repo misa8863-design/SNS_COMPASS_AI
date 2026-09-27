@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    @apply bg-ivory font-sans text-guide antialiased;
+    font-feature-settings: "palt" 1;
+    /* 海図のようなごく薄いドット */
+    background-image: radial-gradient(rgba(107, 76, 59, 0.07) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  h1, h2, h3 {
+    @apply font-maru;
+    font-feature-settings: "palt" 1;
+  }
+  /* 日本語を文節で改行（対応ブラウザのみ。非対応でも通常の改行になるだけ） */
+  h1, h2, h3, blockquote, figcaption, p {
+    word-break: auto-phrase;
+  }
+  ::selection {
+    background: #ddefff;
+  }
+}
+
+@layer components {
+  /* キーボードフォーカスはコンパスブルーで明確に */
+  .focus-ring {
+    @apply outline-none focus-visible:ring-[3px] focus-visible:ring-compass focus-visible:ring-offset-2 focus-visible:ring-offset-ivory;
+  }
+
+  .card {
+    @apply rounded-card border border-ivory-200 bg-ivory-50 shadow-soft;
+  }
+
+  /* ---------- FV CTA クリック領域 ---------- */
+  .hero-cta {
+    position: absolute;
+    left: var(--cta-l);
+    top: var(--cta-t);
+    width: var(--cta-w);
+    height: var(--cta-h);
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: transform 240ms ease, background-color 240ms ease, box-shadow 240ms ease, backdrop-filter 240ms ease;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+  }
+  /* 見た目は動画のボタンに合わせたまま、タップ領域だけ上下に最低44pxまで広げる */
+  .hero-cta::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: max(100%, 44px);
+    transform: translateY(-50%);
+    border-radius: 9999px;
+  }
+  @media (min-width: 768px) {
+    .hero-cta {
+      left: var(--cta-l-md);
+      top: var(--cta-t-md);
+      width: var(--cta-w-md);
+      height: var(--cta-h-md);
+    }
+  }
+  @media (min-width: 1024px) {
+    .hero-cta {
+      left: var(--cta-l-lg);
+      top: var(--cta-t-lg);
+      width: var(--cta-w-lg);
+      height: var(--cta-h-lg);
+    }
+  }
+  @media (hover: hover) {
+    .hero-cta:hover {
+      transform: scale(1.02);
+      background: rgba(92, 184, 255, 0.08);
+      box-shadow: 0 8px 24px rgba(92, 184, 255, 0.18);
+      -webkit-backdrop-filter: brightness(1.08);
+      backdrop-filter: brightness(1.08);
+    }
+  }
+  .hero-cta:active {
+    transform: scale(0.99);
+  }
+  .hero-cta:focus-visible {
+    box-shadow: 0 0 0 3px #fff, 0 0 0 6px #5cb8ff;
+  }
+}
+
+@layer utilities {
+  .animate-float {
+    animation: float 5.5s ease-in-out infinite;
+  }
+  .animate-route {
+    stroke-dasharray: 2 10;
+    animation: route 2.4s cubic-bezier(0.65, 0, 0.35, 1) 0.3s both;
+  }
+  .animate-pulse-ring {
+    animation: pulse-ring 2.6s ease-out infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+/* 航路が CTA から伸びていく（左から右へ描かれる） */
+@keyframes route {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(92, 184, 255, 0.45); }
+  70%, 100% { box-shadow: 0 0 0 12px rgba(92, 184, 255, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
